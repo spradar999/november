@@ -292,14 +292,23 @@ if st.button("📄 Generate A3 PDF"):
         "4. This single plot plan is issued vide number ***/***/***-******* dated : **.**.****."
     ]
 
-    gc_x, gc_y_top = INFO_X, lut_y
+    # --- GENERAL CONDITIONS --- (Improved Layout)
+    gc_x = INFO_X
+    gc_y_top = lut_y - 5  # slight downward spacing
+    
     ax.text(gc_x, gc_y_top, "GENERAL CONDITIONS OF APPROVAL",
-            ha="left", va="bottom", fontsize=4)
-    cond_y = gc_y_top
+            ha="left", va="bottom", fontsize=4.8, weight="bold")
+    
+    line_height = 3.2     # reduced height for compact text
+    wrap_width = 48       # narrower column, prevents overlap
+    cond_y = gc_y_top - 5
+    
     for cond in GENERAL_CONDITIONS:
-        wrapped = textwrap.fill(cond, width=60)
-        ax.text(gc_x, cond_y, wrapped, ha="left", va="top", fontsize=4)
-        cond_y -= 8.0
+        lines = textwrap.wrap(cond, width=wrap_width)
+        for line in lines:
+            ax.text(gc_x, cond_y, line, ha="left", va="top", fontsize=4.2)
+            cond_y -= line_height
+        cond_y -= 2  # extra spacing between each condition
 
     note_y = cond_y 
     ax.text(gc_x, note_y, "NOTE", fontsize=F_LABEL, weight="bold")
@@ -334,6 +343,7 @@ if st.button("📄 Generate A3 PDF"):
                        file_name=f"Single_Site_{survey_no or 'site'}.pdf",
                        mime="application/pdf")
     st.pyplot(fig)
+
 
 
 
